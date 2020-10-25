@@ -22,7 +22,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Service
-public class UsuarioService implements UserDetailsService {
+public class UsuarioService implements IUsuarioService, UserDetailsService {
 
 	private static Logger log = LoggerFactory.getLogger(UsuarioService.class);
 	
@@ -47,6 +47,11 @@ public class UsuarioService implements UserDetailsService {
 		
 		return new User(usuario.getUsername(), usuario.getPassword(), usuario.getEnabled(), true, 
 				true, true, authorities);
+	}
+
+	@Override
+	public Usuario findByUsername(String username) {
+		return client.findByUsername(username);
 	}
 
 }
