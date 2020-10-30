@@ -13,8 +13,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.formacionbdi.springboot.app.commons.usuarios.models.entity.Usuario;
 import com.formacionbdi.springboot.app.oauth.clients.UsuarioFeignClient;
-import com.formacionbdi.springboot.app.usuarios.commons.models.entity.Usuario;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -33,7 +33,7 @@ public class UsuarioService implements IUsuarioService, UserDetailsService {
 		Usuario usuario = client.findByUsername(username);
 		
 		if(usuario == null) {
-			log.error("Eroor en el login, no existe el usuario '"+username+"' en el sistema");
+			log.error("Error en el login, no existe el usuario '"+username+"' en el sistema");
 			throw new UsernameNotFoundException("Eroor en el login, no existe el usuario '"+username+"' en el sistema");
 		}
 		
@@ -53,5 +53,10 @@ public class UsuarioService implements IUsuarioService, UserDetailsService {
 	public Usuario findByUsername(String username) {
 		return client.findByUsername(username);
 	}
+	
+    @Override
+    public Usuario update(Usuario usuario, Long id) {
+        return client.update(usuario, id);
+    }
 
 }

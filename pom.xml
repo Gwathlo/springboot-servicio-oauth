@@ -61,7 +61,7 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>com.formacionbdi.springboot.app.usuarios.commons</groupId>
+			<groupId>com.formacionbdi.springboot.app.commons.usuarios</groupId>
 			<artifactId>springboot-servicio-usuarios-commons</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 			<exclusions>

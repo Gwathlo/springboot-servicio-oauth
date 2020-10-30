@@ -9,8 +9,8 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.token.TokenEnhancer;
 import org.springframework.stereotype.Component;
 
+import com.formacionbdi.springboot.app.commons.usuarios.models.entity.Usuario;
 import com.formacionbdi.springboot.app.oauth.services.UsuarioService;
-import com.formacionbdi.springboot.app.usuarios.commons.models.entity.Usuario;
 
 import lombok.AllArgsConstructor;
 
