@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import com.formacionbdi.springboot.app.commons.usuarios.models.entity.Usuario;
 import com.formacionbdi.springboot.app.oauth.services.IUsuarioService;
 
+import brave.Tracer;
 import feign.FeignException;
 
 @Component
@@ -19,6 +20,9 @@ public class AuthenticationSuccessErrorHandler implements AuthenticationEventPub
 
     @Autowired
     public IUsuarioService service;
+    
+    @Autowired
+    private Tracer tracer;
 	
 	private Logger log = LoggerFactory.getLogger(AuthenticationSuccessErrorHandler.class);
 	
@@ -49,6 +53,8 @@ public class AuthenticationSuccessErrorHandler implements AuthenticationEventPub
 		log.error(mensaje);
 		System.out.println(mensaje);
         try {
+        	StringBuilder errors = new StringBuilder();
+        	errors.append(mensaje);
             Usuario usuario = service.findByUsername(authentication.getName());
             if(usuario.getIntentos() == null) {
                 usuario.setIntentos(0);
@@ -56,11 +62,16 @@ public class AuthenticationSuccessErrorHandler implements AuthenticationEventPub
             log.info("Intentos actual es de: " + usuario.getIntentos());
             usuario.setIntentos(usuario.getIntentos()+1);
             log.info("Intentos despues es de: " + usuario.getIntentos());
+            errors.append(" - Intentos del login: " + usuario.getIntentos());
             if(usuario.getIntentos() >= 3) {
-                log.error(String.format("El usuario %s deshabilitado por máximo intentos", usuario.getUsername()));
+                String format = String.format("El usuario %s deshabilitado por máximo intentos", usuario.getUsername());
+				log.error(format);
+                errors.append(" - " + format);
                 usuario.setEnabled(false);
             }
             service.update(usuario, usuario.getId());
+            
+            tracer.currentSpan().tag("error.mensaje", errors.toString());
         } catch (FeignException e) {
             log.error(String.format("El usuario %s no existe en el sistema", authentication.getName()));
         }
